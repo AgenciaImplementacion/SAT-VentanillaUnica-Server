@@ -25,6 +25,5 @@ public class MainQueryRestController {
         return html;
 
     }
-
    
 }

@@ -20,6 +20,7 @@ import info.proadmintierra.api.data.dao.ObjectSpecialRegimeCategoryDao;
 import info.proadmintierra.api.data.dto.ObjectSpecialRegimeCategoryDto;
 import info.proadmintierra.api.data.entity.Organization;
 import info.proadmintierra.api.data.entity.Restriction;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * ParcelQueryRestController
@@ -58,6 +59,15 @@ public class VUQueryRestController {
         inputObject = osrCatService.save(inputObject);
 
         return inputObject;
+    }
+
+    @GetMapping("/ore/{id}")
+    public Iterable<ObjectSpecialRegimeCategoryDto> list(@PathVariable int id) {
+
+        Organization org = this.organizationService.findById(Long.parseLong(id+"")).get();
+        ObjectSpecialRegimeCategoryDao osrCatService = new ObjectSpecialRegimeCategoryDao(osrService, categoryService, categoryRestrictionService);
+
+        return osrCatService.getListByOrganization(org);
     }
 
     

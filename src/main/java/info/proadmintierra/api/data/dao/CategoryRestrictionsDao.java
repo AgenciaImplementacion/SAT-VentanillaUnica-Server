@@ -1,11 +1,13 @@
 package info.proadmintierra.api.data.dao;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import info.proadmintierra.api.data.dto.CategoryRestrictionsDto;
 import info.proadmintierra.api.data.entity.Category;
 import info.proadmintierra.api.data.entity.CategoryRestriction;
+import info.proadmintierra.api.data.entity.ObjectSpecialRegime;
 
 /**
  * CategoryRestrictionDao
@@ -40,5 +42,24 @@ public class CategoryRestrictionsDao {
 
         return data;
 
+    }
+
+    public Set<CategoryRestrictionsDto> getListByObjectSpecialRegime(ObjectSpecialRegime obj){
+        Set<CategoryRestrictionsDto> list = new HashSet<CategoryRestrictionsDto>();
+
+        List<Category> l = this.categoryService.findByObjectSR(obj);
+
+        for(Category o : l){
+            CategoryRestrictionsDto n = new CategoryRestrictionsDto();
+            n.setCategory(o);
+            n.setObjSpecialRegime(obj);
+
+            Set<CategoryRestriction> r = new HashSet<CategoryRestriction>(this.categoryRestrictionService.findByCategory(o));
+            n.setRestrictions(r);
+            
+            list.add(n);
+        }
+        
+        return list;
     }
 }
