@@ -31,12 +31,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/vu")
 @CrossOrigin(origins = { "http://localhost:4200", "*" })
 public class VUQueryRestController {
-    
+
     // SELECT
     // ST_AsText(ST_GeomFromGeoJSON('{"type":"Point","coordinates":[-48.23456,20.12345]}'))
     // http://192.168.98.69:7070/geoserver/LADM/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames=LADM:canutalito_area_protegida&count=2&outputFormat=application/json
     // http://192.168.98.69:7070/geoserver/LADM/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames=LADM:canutalito_area_protegida&featureID=canutalito_area_protegida.fid--6ad77683_16bb35d3b8b_-4e33&outputFormat=application/json
-    
+
     @Autowired
     private ICategoryRestrictionDao categoryRestrictionService;
 
@@ -52,12 +52,12 @@ public class VUQueryRestController {
     @Autowired
     private IRestrictionDao restrictionService;
 
-
     @PostMapping("/ore")
     public ObjectSpecialRegimeCategoryDto create(@Valid @RequestBody ObjectSpecialRegimeCategoryDto inputObject,
             BindingResult result) {
 
-        ObjectSpecialRegimeCategoryDao osrCatService = new ObjectSpecialRegimeCategoryDao(osrService, categoryService, categoryRestrictionService);
+        ObjectSpecialRegimeCategoryDao osrCatService = new ObjectSpecialRegimeCategoryDao(osrService, categoryService,
+                categoryRestrictionService);
         inputObject = osrCatService.save(inputObject);
 
         return inputObject;
@@ -67,7 +67,8 @@ public class VUQueryRestController {
     public ObjectSpecialRegimeCategoryDto update(@Valid @RequestBody ObjectSpecialRegimeCategoryDto inputObject,
             BindingResult result) {
 
-        ObjectSpecialRegimeCategoryDao osrCatService = new ObjectSpecialRegimeCategoryDao(osrService, categoryService, categoryRestrictionService);
+        ObjectSpecialRegimeCategoryDao osrCatService = new ObjectSpecialRegimeCategoryDao(osrService, categoryService,
+                categoryRestrictionService);
         inputObject = osrCatService.update(inputObject);
 
         return inputObject;
@@ -76,25 +77,27 @@ public class VUQueryRestController {
     @DeleteMapping("/ore/{id}")
     public void delete(@PathVariable long id) {
 
-        
+        ObjectSpecialRegimeCategoryDao osrCatService = new ObjectSpecialRegimeCategoryDao(osrService, categoryService,
+                categoryRestrictionService);
+        osrCatService.delete(id);
 
     }
 
     @GetMapping("/ore/{id}")
     public Iterable<ObjectSpecialRegimeCategoryDto> list(@PathVariable int id) {
 
-        Organization org = this.organizationService.findById(Long.parseLong(id+"")).get();
-        ObjectSpecialRegimeCategoryDao osrCatService = new ObjectSpecialRegimeCategoryDao(osrService, categoryService, categoryRestrictionService);
+        Organization org = this.organizationService.findById(Long.parseLong(id + "")).get();
+        ObjectSpecialRegimeCategoryDao osrCatService = new ObjectSpecialRegimeCategoryDao(osrService, categoryService,
+                categoryRestrictionService);
 
         return osrCatService.getListByOrganization(org);
     }
 
-    
     @GetMapping("/ore/restrictions")
     public Iterable<Restriction> getRestrictions() {
         return this.restrictionService.findAll();
     }
-    
+
     @GetMapping("/ore/organizations")
     public Iterable<Organization> getEntities() {
         return this.organizationService.findAll();

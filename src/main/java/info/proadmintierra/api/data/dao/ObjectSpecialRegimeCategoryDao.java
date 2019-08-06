@@ -11,6 +11,7 @@ import info.proadmintierra.api.data.entity.Category;
 import info.proadmintierra.api.data.entity.CategoryRestriction;
 import info.proadmintierra.api.data.entity.ObjectSpecialRegime;
 import info.proadmintierra.api.data.entity.Organization;
+import net.bytebuddy.dynamic.DynamicType.Builder.FieldDefinition.Optional;
 
 /**
  * RestrictionObjectSpecialRegimeDtoDao
@@ -28,6 +29,7 @@ public class ObjectSpecialRegimeCategoryDao {
         this.catRestrService = new CategoryRestrictionsDao(categoryService, categoryRestrictionService);
         this.categoryService = categoryService;
         this.caterogyRestrictionService = categoryRestrictionService;
+
     }
 
     public ObjectSpecialRegimeCategoryDto save(ObjectSpecialRegimeCategoryDto data) {
@@ -65,24 +67,16 @@ public class ObjectSpecialRegimeCategoryDao {
         Set<CategoryRestrictionsDto> storedCategories = new HashSet<>();
 
         for (CategoryRestrictionsDto c : categories) {
-
             long categoryId = c.getCategory().getId();
             if (categoryId != 0) {
-                System.out.println("borrando categoria ... " + categoryId);
 
                 List<CategoryRestriction> objectsRestrictions = this.caterogyRestrictionService
                         .findByCategory(c.getCategory());
-
                 if (objectsRestrictions.size() > 0) {
-                    System.out.println("borrando restricciones" + objectsRestrictions.size());
-
                     for (CategoryRestriction care : objectsRestrictions) {
-                        System.out.println("id ----> " + care.getId());
                         this.caterogyRestrictionService.deleteById(care.getId());
                     }
-
                 }
-
                 this.categoryService.deleteById(categoryId);
             }
 
@@ -98,9 +92,20 @@ public class ObjectSpecialRegimeCategoryDao {
     }
 
     public void delete(long objectSpecialRegimeId) {
-
-        this.osrService.findById(objectSpecialRegimeId);
-
+        ObjectSpecialRegime osr = this.osrService.findById(objectSpecialRegimeId);
+        if (osr != null) {
+            List<Category> categories = this.categoryService.findByObjectSR(osr);
+            for (Category c : categories) {
+                List<CategoryRestriction> objectsRestrictions = this.caterogyRestrictionService.findByCategory(c);
+                if (objectsRestrictions.size() > 0) {
+                    for (CategoryRestriction care : objectsRestrictions) {
+                        this.caterogyRestrictionService.deleteById(care.getId());
+                    }
+                }
+                this.categoryService.deleteById(c.getId());
+            }
+            this.osrService.deleteById(objectSpecialRegimeId);
+        }
     }
 
     public List<ObjectSpecialRegimeCategoryDto> getListByOrganization(Organization org) {

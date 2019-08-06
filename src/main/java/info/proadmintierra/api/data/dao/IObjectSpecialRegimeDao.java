@@ -13,5 +13,7 @@ import info.proadmintierra.api.data.entity.Organization;
 public interface IObjectSpecialRegimeDao extends CrudRepository<ObjectSpecialRegime, Long> {
 
     List<ObjectSpecialRegime> findByOrganization(Organization organization);
+
+    ObjectSpecialRegime findById(long id);
     
 }
