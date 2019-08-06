@@ -1,6 +1,7 @@
 package info.proadmintierra.api.data.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.URL;
@@ -29,7 +31,8 @@ public class Category implements Serializable {
     private Long id;
 
     @JoinColumn(name = "id_object_special_regime", nullable = false)
-    @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private ObjectSpecialRegime objectSR;
 
     @Column(nullable = true)
@@ -45,6 +48,17 @@ public class Category implements Serializable {
     @Column(nullable = true, columnDefinition = "text")
     private String description;
 
+    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<CategoryRestriction> restrictions;
+
+    public Set<CategoryRestriction> getRestrictions() {
+        return this.restrictions;
+    }
+
+    public void setRestrictions(Set<CategoryRestriction> restrictions) {
+        this.restrictions = restrictions;
+    }
 
     public Long getId() {
         return this.id;

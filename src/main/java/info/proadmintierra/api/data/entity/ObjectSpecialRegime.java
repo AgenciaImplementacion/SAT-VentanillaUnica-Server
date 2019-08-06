@@ -30,7 +30,8 @@ public class ObjectSpecialRegime implements Serializable {
     private Long id;
 
     @JoinColumn(name = "id_organization", nullable = false)
-    @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Organization organization;
 
     @NotEmpty(message = "no puede ser vacío")
