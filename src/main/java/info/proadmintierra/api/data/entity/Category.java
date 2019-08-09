@@ -97,8 +97,8 @@ public class Category implements Serializable {
     }
 
     public void setUrlMasInfo(String urlMasInfo) {
-        this.urlMasInfo = urlMasInfo;
-    }
+		this.urlMasInfo = urlMasInfo;
+	}
 
     public String getDescription() {
         return this.description;
